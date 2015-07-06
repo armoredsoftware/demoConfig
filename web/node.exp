@@ -1,0 +1,28 @@
+#!/usr/bin/expect -f 
+# File:        node.exp
+# Author:      Justin Dawson (JDawson@ku.edu)
+# Description: This expect script will ssh to the input compute node then
+#              call the getVms.exp script residing on the compute node to
+#              get the running VM's domain id and VM's name 
+
+log_user 0
+#exp_internal 1
+set prompt "(%|#|\\\$) $"
+catch {set prompt $env(EXPECT_PROMPT)}
+
+set node [lindex $argv 0]
+spawn ssh armored@compute$node
+expect "Are you sure you want to continue connecting (yes/no)?"
+send "yes\r"
+expect "password:"
+send "armored\r"
+expect -re $prompt
+send "./getVms.exp\r"
+expect -re $prompt
+set a [split $expect_out(buffer) "\n\["]
+#puts $a
+set n [llength $a] 
+incr n -2
+for {set index 1} {$index < $n} {incr index +1} {
+   puts [lindex $a $index]
+}

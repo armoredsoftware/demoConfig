@@ -49,11 +49,13 @@ function computeNodeChange(){
             $(arr).each(function(){
                 var v = '<tr></tr>';                                             
                 var vm = this.split("\t");
-                vm[2] = vm[2].trim();
-                v = $(v).append('<td title="'+vm[2]+'"><input type="radio" name="'+
-                      num+'" data-ip="'+vm[2]+'"/></td><td title="'+vm[2]+'">'+ vm[1]+
-	   	      '</td><td title="'+vm[2]+'">'+vm[0]+'</td><br/>');
-                list=$(list).append(v);
+                if ( vm.length > 2){
+                   vm[2] = vm[2].trim();
+                   v = $(v).append('<td title="'+vm[2]+'"><input type="radio" name="'+
+                         num+'" data-ip="'+vm[2]+'"/></td><td title="'+vm[2]+'">'+ vm[1]+
+	   	         '</td><td title="'+vm[2]+'">'+vm[0]+'</td><br/>');
+                   list=$(list).append(v);
+                }
 	    });
                                                         
 	    if (arr.length > 0){

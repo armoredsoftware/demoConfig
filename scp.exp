@@ -1,0 +1,14 @@
+#!/usr/bin/expect -f
+
+set dir [lindex $argv 0]
+set rem [lindex $argv 1]
+
+spawn scp -r $dir  $rem
+expect {
+  "(yes/no)?" {send "yes\r"
+               expect "password:"
+               send "armored\r"
+              }  
+  "password:" { send "armored\r"}
+}
+interact

@@ -1,12 +1,14 @@
 #!/bin/bash
-if [ -d demo4 ]; then
-   rm -rf demo4;
-fi
-mkdir demo4
-cd demo4
-mkdir executables
+PWD=`pwd`
+DEMO_DIR="demo4"
+EXECS="demo"
 
-#cabal sandbox init
+if [ -d $DEMO_DIR ]; then
+   rm -rf $DEMO_DIR;
+fi
+mkdir -p $DEMO_DIR/$EXECS
+cd $DEMO_DIR
+
 git clone https://github.com/armoredsoftware/protocolImplementation.git
 git clone https://github.com/armoredsoftware/xenVchan.git
 git clone https://github.com/armoredsoftware/tpmEmulator.git
@@ -29,7 +31,12 @@ cabal install --dependencies-only
 cabal build
 cd ..
 
-cp outerattester/dist/build/outerAttester/outerAttester  ../executables/
-cp outerappraiser/dist/build/outerAppraiser/outerAppraiser ../executables/
-cp certificateAuthority/dist/build/CA/CA ../executables/
+cp outerattester/dist/build/outerAttester/outerAttester  ../$EXECS
+cp outerappraiser/dist/build/outerAppraiser/outerAppraiser ../$EXECS
+cp certificateAuthority/dist/build/CA/CA ../$EXECS
+
+cd $PWD
+# cp exectuables to every vm
+#./cpScript.sh $DEMO_DIR/$EXECS
+
 

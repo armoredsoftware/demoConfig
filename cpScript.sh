@@ -10,10 +10,15 @@ if [ -z "$source_dir" ]; then
    echo "    cpScript.sh takes a source directory as argument to send to all vms in compute cluster"
    exit;
  else
-   if [ ! -d "$source_dir" ]; then
+   if [ ! -e "$source_dir" ]; then
      echo "  Directory does not exist: $source_dir"
      exit
    fi  
+fi
+
+if [ ! -z "$2" ]; then
+     compute_node_start=$2
+     compute_node_end=$2
 fi
 
 

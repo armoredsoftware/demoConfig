@@ -1,0 +1,21 @@
+--Provisioning--
+
+All necessary functions reside in Provisioning.hs.  ProvisioningMain has all the necessary function invocations (all but one commented out for each particular desired provisioning activity).
+
+-ekProvision:  Extracts the EK(Endorsement Key) from the currently running TPM Emulator, and exports it to the file "ekpub.txt".  
+
+1) Must be run on the Attester VM while TPM Emulator is running.  
+2) Send "ekpub.txt" to the Certificate Authority VM (so that it can use the EK to encrypt the AIK, in accordance with the Privacy CA protocol).
+
+-exportCurrentComp:  Queries the running TPM Emulator and extracts the CURRENT pcr composite(TPM_PCR_COMPOSITE), and exports it to the file "goldenPcrComposite.txt".  
+
+1) Must be run on the Attester VM while TPM Emulator is running.  
+2) Send "goldenPcrComposite" to the Appraiser VM (so that it can check this golden composite against the one it receives from the Attester in the protocol).
+
+exportCAKeys:  Exports the CA public key to the file "caPublicKey.txt" and the CA private key to the file "caPrivateKey.txt".  (Note:  A NEW public/private key pair is generated on each invocation, using the system entropy).
+
+1) Can be run anywhere, but makes the most sense to run on the certificate authority VM.
+2)  The private key file should remain on the ca VM
+3)  Send the public key file to the Appraiser VM (so that it can verify the signature of the data signed with the ca private key).
+
+ 

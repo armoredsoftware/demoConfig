@@ -5,11 +5,12 @@ In order to create a VM run the buildlargecentos65pvm.sh with sudo.
 It will then create a directory /xenImages containing the vm images
 
 
+## Creating Multiple VMs
 To create multiple images it is recommended to run the script once
 then make a copy of the .img and the run.cfg files. This way you can create multiple 
 vms without having to wait for the vms to install.
 In the run.cfg file you will need to change the name as well as point to the correct
-.img file.
+.img file. Xen will not allow running VMs to share a name
 
 To start a new vm on the Xen compute node run the following command:
 
@@ -19,5 +20,22 @@ e.g. > sudo xl create /xenImages/centos65x86_64_run.cfg
 
 After running the create command you can run
 *sudo xl list* in order to view the running vms
+
+In order to login to running vm you can use the following command
+
+*>sudo xl console [domain id #]
+
+The credentials are as follows:
+
+username: root
+password: armored
+
+in order to exit type  (Ctrl+])
+
+It is recommended that you use the web interface or sudo
+xl console and ifconfig to obtain the ip address and then
+ssh to the ip address. Multiple sessions of xl console have
+unexpected results when run on the same VM.
+ 
 
 

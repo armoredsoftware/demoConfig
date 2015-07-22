@@ -28,7 +28,7 @@ ip=`./getIPs.exp $compute_node_start $compute_node_end`
 echo -n "Copying $source_dir to vms"
 for i in $ip; do
   echo -n "."
-  ./scp.exp  "$source_dir" "$i"
+  ./scp.exp  "$source_dir" "$i" &
 done
 
 echo

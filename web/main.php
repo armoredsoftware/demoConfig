@@ -52,17 +52,24 @@ function computeNodeChange(){
                 if ( vm.length > 2){
                    vm[2] = vm[2].trim();
                    v = $(v).append('<td title="'+vm[2]+'"><input type="radio" name="'+
-                         num+'" data-ip="'+vm[2]+'"/></td><td title="'+vm[2]+'">'+ vm[1]+
-	   	         '</td><td title="'+vm[2]+'">'+vm[0]+'</td><br/>');
+                         num+'" data-ip="'+vm[2]+'" data-dom="'+vm[1]+'"/></td><td title="'+vm[2]+'">'+ vm[1]+
+	   	         '</td><td class="vmName" title="'+vm[2]+'">'+vm[0]+'</td><br/>');
                    list=$(list).append(v);
                 }
 	    });
                                                         
 	    if (arr.length > 0){
-                var button = '<button id="'+num+'Cancel">Stop</button>';
 	        $(that).children(".vms").append(list);
-                $(that).children(".vms").append(button);
-                $("#"+num+"Cancel").click(stopFunc);
+                $(list).find(".vmName").click(function tmp (){
+                    $(this).closest("tr").find("td>input:radio").click();
+                  });
+                $(list).find("input:radio").click(clickRadio);
+                $(that).children(".launch").show();
+                $(that).children(".launch").click(launchFunc);
+                
+     //           var button = '<button id="'+num+'Cancel">Stop</button>';
+     //           $(that).children(".vms").append(button);
+     //           $("#"+num+"Cancel").click(stopFunc);
 	    }else{
 	        $(that).children(".vms").append("<p>None</p>");
 	    }
@@ -73,6 +80,64 @@ function computeNodeChange(){
                 
          }
   });      
+}
+function clickRadio(){
+   $(this).closest(".vms").siblings(".kill").click(); 
+   $(this).closest(".vms").siblings(".launch").prop("disabled",false);
+}
+function launchFunc(){
+    var launch = this;
+    var exec = $(this).data("executable");
+    var button =$(this).siblings(".vms").find("input:checked");
+    var kill = $(this).siblings(".kill");    
+
+    var appraiserDom = $("#appNode").siblings(".vms").find("input:checked");
+    var attesterDom = $("#attNode1").siblings(".vms").find("input:checked");
+    var caDom = $("#caNode").siblings(".vms").find("input:checked");
+
+    if ( appraiserDom.length == 0 || attesterDom.length == 0|| caDom.length == 0){
+       alert("Please select Appraiser/Attester/Certificate Authority before launching executables");
+       return;  
+    }
+
+    kill.prop("disabled", false);
+    kill.show();
+    kill.click(killFunc);
+    kill.data("ip",button.data("ip")); 
+    console.log("Launching: "+exec+" "+$(appraiserDom).data("dom")+" "+$(attesterDom).data("dom")+" "+$(caDom).data("dom"));
+
+    $.ajax({method:"POST",
+         url:"startExecutable.php",
+         data:{ip:button.data("ip"),
+               exec:exec,
+               app:$(appraiserDom).data("dom"),
+               att:$(attesterDom).data("dom"),
+               ca: $(caDom).data("dom")},
+         success:function(data){
+            console.log(data);
+            $(launch).prop("disabled",true);
+         }
+         });
+
+}
+
+function killFunc(){
+    var launch = this;
+    var exec = $(this).data("executable");
+    var ip =$(this).data("ip");
+ 
+    $.ajax({method:"POST",
+         url:"killExecutable.php",
+         data:{ip:ip,exec:exec},
+         success:function(data){
+            console.log(data);
+            $(launch).prop("disabled",true);
+         }
+         });
+
+    $(this).prop("disabled",true);
+    $(this).hide();
+    $(this).siblings(".launch").prop("disabled",false);
 }
 
 function stopFunc(){
@@ -201,7 +266,7 @@ function buttonSetup(){
             $("#attester"+nAttesters).children(".x").click(function(){
                $(this).parent().remove();
              });
-            $("#attester"+nAttesters).find("#computeNode"+nAttesters).change(computeNodeChange);
+            $("#attester"+nAttesters).find("#attNode"+nAttesters).change(computeNodeChange);
         });
        $("#attester"+nAttesters).hover(function(){
                                           $(this).children(".x").show();},
@@ -216,7 +281,7 @@ function buttonSetup(){
     //   var data = $("#protocol").val();
        var app = $("#appNode").siblings(".vms").find("input:checked"); 
        var appIp = app.data("ip"); 
-       var att = $("#computeNode1").siblings(".vms").find("input:checked");
+       var att = $("#attNode1").siblings(".vms").find("input:checked");
        var attIp = att.data("ip");
  
        if ( app.length == 0){
@@ -274,7 +339,7 @@ function buttonSetup(){
           setTimeout(function(){
           _cancelled= 0;
           readLog($("#appNode"));
-          readLog($("#computeNode1"));
+          readLog($("#attNode1"));
                   },300);
     });
 }
@@ -321,40 +386,15 @@ function start(){
     buttonSetup();
 
    //Compute node selection
-   $("#computeNode").change(function(){
-      var node = $(this).val();
-      if (node == ""){
-         return;
-      }
-      $("#global_loading").show();
-      $.ajax({method:"POST",
-              url:"nodeStatus.php",
-              data:{node:node},
-              success:function(data){
-                $("#global_loading").hide();
-                var arr = data.split("\n");
-                arr = arr.slice(0,arr.length-1);
-                var list = $("<ul></ul>");
-                $("#status").empty();
-                $("#status").append("<h4>VMs running:</h4>"); 
-                $(arr).each(function(){
-                   list.append("<li>"+this+"</li>");
-                 });
-                if (arr.length > 0){
-                  $("#status").append(list);
-                }else{
-                  $("#status").append("<p>None</p>");
-                }
-                
-              }
-      });      
-    });  
     $("#appNode").change(computeNodeChange);
-    $("#computeNode1").change(computeNodeChange);
+    $("#attNode1").change(computeNodeChange);
+    $("#caNode").change(computeNodeChange);
     $("#requestType").change(requestChange);
 
+    //For browsers that remember inputs, this will fire events on refresh 
     $("#appNode").change();
-    $("#computeNode1").change();
+    $("#attNode1").change();
+    $("#caNode").change();
     $("#requestType").change();
       
     $("#requestList").click(function(){
@@ -448,16 +488,20 @@ function start(){
         <option>7</option>
         <option>8</option>
       </select>
+
+
       <div class="vms"></div>
+      <button class="launch" id="appLaunch" style="display:none" data-executable="Appraiser" disabled>Launch</button>
+      <button class="kill" id="appKill" style="display:none" data-executable="Appraiser" disabled>Kill</button>
       <h4>Log</h4>
-      <textarea id="appLog" rows="22" cols="30" style="resize:none;" disabled="disabled">
+      <textarea id="appLog" rows="22" cols="30" style="resize:none;" disabled>
       </textarea>
    </div>
 
    <div class="logDiv">
       <h3 class="title"> Attester</h3>
       <label>Select a Compute Node: </label>
-      <select id="computeNode1">
+      <select id="attNode1">
         <option></option>
         <option>1</option>
         <option>2</option>
@@ -469,11 +513,39 @@ function start(){
         <option>8</option>
       </select>
 
+
       <div class="vms"></div>
+      <button class="launch" id="attLaunch" style="display:none" data-executable="Attester" disabled>Launch</button>
+      <button class="kill" id="attKill" style="display:none" data-executable="Attester" disabled>Kill</button>
       <h4>Log</h4>
-      <textarea id="attLog" rows="22" cols="30" style="resize:none;" disabled="disabled">
+      <textarea id="attLog" rows="22" cols="30" style="resize:none;" disabled>
       </textarea>
    </div>
+   
+   <div class="logDiv">
+      <h3 class="title">Certificate Authority</h3>
+      <label>Select a Compute Node: </label>
+      <select id="caNode">
+        <option></option>
+        <option>1</option>
+        <option>2</option>
+        <option>3</option>
+        <option>4</option>
+        <option>5</option>
+        <option>6</option>
+        <option>7</option>
+        <option>8</option>
+      </select>
+
+
+      <div class="vms"></div>
+      <button class="launch" id="CALaunch" style="display:none" data-executable="CA" disabled>Launch</button>
+      <button class="kill" id="CAKill" style="display:none" data-executable="CA" disabled>Kill</button>
+      <h4>Log</h4>
+      <textarea id="appLog" rows="22" cols="30" style="resize:none;" disabled>
+      </textarea>
+   </div>
+
 </div>
 <div>
    <img id="addAttester" src="images/plus.png" width="50px"/>

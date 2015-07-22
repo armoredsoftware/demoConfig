@@ -78,3 +78,6 @@ label{
 #requestParams label{
     padding-right:40px;
 }
+.vmName{
+  cursor:pointer;
+}

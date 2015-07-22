@@ -1,10 +1,6 @@
 #!/bin/bash
 
-yum install gmp
-yum install gcc
-yum install cmake
-yum install wget
-yum install tar
+yum -y install gmp-devel gcc cmake wget tar kernel-devel
 
 wget sourceforge.net/projects/tpm-emulator.berlios/files/tpm_emulator-0.7.4.tar.gz
 
@@ -15,3 +11,5 @@ cd build
 cmake ../
 make
 make install
+
+modprobe tpmd_dev

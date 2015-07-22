@@ -32,7 +32,7 @@ If you would like to do this for all the compute nodes then run:
 or if you would like to just do it to all the vms on a certain compute node
 then run the script with the compute node #
 
-*> ./demo4.sh [compute node #]
+*> ./demo4.sh [compute node #]*
 
 Note: Fresh VMs (VMs that do not have the xen libraries installed) will be rebooted
 as part of the installation process, changing their domain IDs and IP addresses

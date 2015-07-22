@@ -1,0 +1,12 @@
+modprobe xen_gntalloc
+modprobe xen_gntdev
+modprobe xen_evtchn
+
+tpmd_installed=`modprobe tpmd_dev 2>&1`
+
+if [ "$tpmd_installed" != "" ];then
+   if [ -x "/root/demo/emulatorSetup.sh" ]; then
+     /root/demo/emulatorSetup.sh 2>&1 
+   fi
+fi
+ 

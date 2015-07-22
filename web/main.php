@@ -95,24 +95,33 @@ function launchFunc(){
     var attesterDom = $("#attNode1").siblings(".vms").find("input:checked");
     var caDom = $("#caNode").siblings(".vms").find("input:checked");
 
-    if ( appraiserDom.length == 0 || attesterDom.length == 0|| caDom.length == 0){
+    if ( (appraiserDom.length == 0 && $("#outsideAppIp").val() == "") || attesterDom.length == 0|| caDom.length == 0){
        alert("Please select Appraiser/Attester/Certificate Authority before launching executables");
        return;  
+    }
+    var appDomVal;
+    var attDomVal = $(attesterDom).data("dom");
+    var caDomVal  = $(caDom).data("dom");    
+   
+    if ( appraiserDom.length != 0){
+        appDomVal = $(appraiserDom).data("dom");
+    }else{
+        appDomVal = -1;
     }
 
     kill.prop("disabled", false);
     kill.show();
     kill.click(killFunc);
     kill.data("ip",button.data("ip")); 
-    console.log("Launching: "+exec+" "+$(appraiserDom).data("dom")+" "+$(attesterDom).data("dom")+" "+$(caDom).data("dom"));
+    console.log("Launching: "+exec+" "+appDomVal+" "+attDomVal+" "+caDomVal);
 
     $.ajax({method:"POST",
          url:"startExecutable.php",
          data:{ip:button.data("ip"),
                exec:exec,
-               app:$(appraiserDom).data("dom"),
-               att:$(attesterDom).data("dom"),
-               ca: $(caDom).data("dom")},
+               app:appDomVal,
+               att:attDomVal,
+               ca: caDomVal},
          success:function(data){
             console.log(data);
             $(launch).prop("disabled",true);
@@ -280,20 +289,31 @@ function buttonSetup(){
        _cancelled= 1;
     //   var data = $("#protocol").val();
        var app = $("#appNode").siblings(".vms").find("input:checked"); 
-       var appIp = app.data("ip"); 
+       var outsideApp = $("#outsideAppIp");
+       var appIp = ""; 
        var att = $("#attNode1").siblings(".vms").find("input:checked");
-       var attIp = att.data("ip");
+       var attIp = "";
  
-       if ( app.length == 0){
-          alert("Select an Appraiser");
-          $("#global_loading").hide();
-          return;
-       } 
+       if (app.length != 0){
+          appIp=app.data("ip");
+       }else{
+
+         if (outsideApp.val() != ""){
+            appIp=outsideApp.val();
+         }else{
+            alert("Select an Appraiser");
+            $("#global_loading").hide();
+            return;
+         }
+       }
+
        if ( att.length == 0){
           alert("Select an Attester");
           $("#global_loading").hide();
           return;
-       } 
+       }else{
+          attIp=att.data("ip");
+       }
      
        var rType = preprocessReqType();
 
@@ -327,6 +347,7 @@ function buttonSetup(){
        +', "EntityNote":null, "EntityId":null}}';
        
        console.log(data);
+       console.log(appIp);
        $.ajax({method:"POST",
                url:"send.php",
                data:{ip:appIp,data:"request="+data},
@@ -476,6 +497,10 @@ function start(){
 
    <div class="logDiv">
       <h3 class="title">Appraiser</h3>
+      <div style="margin-bottom: 10px">
+         <label>IP Address:</label>
+         <input type="text" id="outsideAppIp"/>
+      </div>
       <label>Select a Compute Node: </label>
       <select id="appNode">
         <option></option>

@@ -25,11 +25,11 @@ the demo4.sh script. This script will download the appropriate repos for demo4
 and compile them, copy the executables over to the vms as well as install the
 tpmEmulator and xen-devel and xen-runtime libraries. 
 
-If you would like to do this for all the compute nodes then run:
+If you would like to do this for all the vms on all the compute nodes then run:
 
 *> ./demo4.sh all*
 
-or if you would like to just do it to all the vms on a certain compute node
+or if you would like to just do it to all the vms on a single compute node
 then run the script with the compute node #
 
 *> ./demo4.sh [compute node #]*

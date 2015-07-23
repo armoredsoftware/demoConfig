@@ -7,8 +7,8 @@ This repository contains the necessary scripts to run Armored Software Demonstra
 In order to run Demo 4 the following needs to be in place:
 
 * 3 virtual machines need to be running
-* latest web interface needs to be deployed on tuna 
 * getVmIp.exp needs to be located in the home directory of the compute node (for the web interface to function)
+* latest web interface needs to be deployed on tuna 
 
 See demoConfig/vmCreation/README.md for instructions on 
 creating VMs on a Xen compute node.

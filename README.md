@@ -3,7 +3,7 @@ demoConfig
 This repository contains the necessary scripts to run Armored Software Demonstrations
 
 
-## Demo 4 ##
+## Demo 4 Setup ##
 In order to run Demo 4 the following needs to be in place:
 
 * 3 virtual machines need to be running
@@ -44,6 +44,14 @@ It is recommended to do a sudo xl console [domain id #] after the script has com
 to see when the reboot has completed
 
 After the VMs have rebooted, the web interface may be used in order to run the demonstration 
+
+## Running Demo 4 ##
+Open a browser to the web interface. Select compute nodes and vms for Appraiser, Attester, and CA. If you have not
+launched the executables from the VMs then click on the Launch button for each entity, select 'Protocol Number' as
+the request type and '1' as the number then click 'Send Request'. You should see "All checks succeeded" in the Appraiser
+Log, and "End of Attestation" in the Attester log, if everything succeeded. 
+
+
 
 ## Script Descriptions ##
 

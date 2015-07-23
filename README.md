@@ -7,16 +7,19 @@ This repository contains the necessary scripts to run Armored Software Demonstra
 In order to run Demo 4 the following needs to be in place:
 
 * 3 virtual machines need to be running
-* latest web interface needs to be deployed on tuna
-
+* latest web interface needs to be deployed on tuna 
+* getVmIp.exp needs to be located in the home directory of the compute node (for the web interface to function)
 
 See demoConfig/vmCreation/README.md for instructions on 
 creating VMs on a Xen compute node.
 
 The web interface can be placed on tuna by doing the following
-in the /var/www/html directory
+in the */var/www/html/* directory:
 
 sudo svn export export https://github.com/armoredsoftware/demoConfig/trunk/web armoredWeb
+
+* Note: If you are not using armoredWeb as the directory for the web interface then you will
+        need to change the URL in the getIps.exp script
 
 and can then be accessed by opening a web browser at http://tuna.ittc.ku.edu/armoredWeb
 
@@ -42,6 +45,25 @@ to see when the reboot has completed
 
 After the VMs have rebooted, the web interface may be used in order to run the demonstration 
 
+## Script Descriptions ##
+
+demo4.sh [compute node or all] - downloads all repos needed for demo4, compiles all executables, and copies them
+                                 to all the vms running on the input compute node or to all the VMs running on all 
+                                 compute nodes using the cpScript.sh and installs xen libraries and TPM Emulator 
+ 
+cpScript.sh [directory or file] [compute node] - copies entire directory or file to all VMs running on the input compute node
+                                                 if the compute node is not specified then the file / directory will be copied
+                                                 to all the VMs running on all the compute nodes                        
+
+getVmIp.exp - Script needed for the web interface to get the VM IP addresses. Should be located in the home directory of the
+              compute node.
+
+scp.exp - Expect script to copy file/directory over to the VMs and handle the password entrys
+
+getIps.exp [compute node start] [compute node end]- Expect script used to obtain all the IPs of a compute node by calling the web interface
+                                                    on all the compute nodes found within the input range of compute nodes, if the web
+                                                    interface is not located at /var/www/html/armoredWeb on tuna, then the URL will need
+                                                    to be changed in this file.
 
 ## General Provisioning Information ##
 

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-web_url="http://tuna.ittc.ku.edu/dawson"
+web_url="http://tuna.ittc.ku.edu/armoredWeb"
 compute_node_start=$1
 compute_node_end=$2
 

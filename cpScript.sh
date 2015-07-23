@@ -1,6 +1,5 @@
 #!/bin/bash
 
-web_url="http://tuna.ittc.ku.edu/dawson"
 source_dir=$1
 compute_node_start=1
 compute_node_end=8

@@ -1,6 +1,6 @@
 #!/bin/bash
 PWD=`pwd`
-DEMO_DIR="demo4"
+DEMO_DIR="demo5"
 EXECS="demo"
 
 if [ -z "$1" ];then
@@ -18,22 +18,28 @@ cd $DEMO_DIR
 git clone https://github.com/armoredsoftware/protocolImplementation.git
 git clone https://github.com/armoredsoftware/xenVchan.git
 git clone https://github.com/armoredsoftware/tpmEmulator.git
+git clone https://github.com/ku-fpg/remote-json.git
 
-cd xenVchan
-git checkout tags/v0.4
-cd ..
 
-cd tpmEmulator
-git checkout tags/v0.4
-cd ..
+#Tags
+#cd xenVchan
+#git checkout tags/v0.4
+#cd ..
 
-cd protocolImplementation
-git checkout tags/v0.4
+#cd tpmEmulator
+#git checkout tags/v0.4
+#cd ..
+
+#cd protocolImplementation
+#git checkout tags/v0.4
+
+
+exit
 
 for i in outerappraiser outerattester; do
   cd $i;
   cabal sandbox init;
-  cabal sandbox add-source ../../tpmEmulator ../../xenVchan/VChanUtil ../shared/bytestringJSON ../shared ../appraisal ../attestation ../protoMonad ../negotiationtools
+  cabal sandbox add-source ../../tpmEmulator ../../xenVchan/VChanUtil ../shared/bytestringJSON ../shared ../appraisal ../attestation ../protoMonad ../negotiationtools ../../remote-json ../remoteMonad
  
   # run one in background
   if [ "$i" == "outerappraiser" ];then
@@ -53,7 +59,7 @@ cd ..
 
 cd certificateAuthority
 cabal sandbox init;
-cabal sandbox add-source ../../tpmEmulator ../../xenVchan/VChanUtil ../shared/bytestringJSON ../shared ../protoMonad 
+cabal sandbox add-source ../../tpmEmulator ../../xenVchan/VChanUtil ../shared/bytestringJSON ../shared ../protoMonad  ../../remote-json ../remoteMonad
 cabal install --dependencies-only
 cabal build
 cd ..
@@ -68,8 +74,7 @@ ln -s ../$EXECS/outerAppraiser ../$EXECS/Appraiser
 
 
 cd ../../
-cp includedFiles/common/* $DEMO_DIR/$EXECS 
-cp -r includedFiles/demo4/* $DEMO_DIR/$EXECS 
+cp includedFiles/* $DEMO_DIR/$EXECS 
 
 cd $PWD
 # cp exectuables to every vm

@@ -4,6 +4,8 @@ cd ~/demo
 
 mv caPrivateKey.txt caPublicKey.txt ekpub.txt goldenPcrComposite.txt ..
 
+./measurerSetup.sh
+
 #Set up so modprobes get executed on reboot, and tpm emulator gets installed
 # if not already there
 

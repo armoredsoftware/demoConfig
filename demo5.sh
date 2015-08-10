@@ -18,8 +18,8 @@ cd $DEMO_DIR
 git clone https://github.com/armoredsoftware/protocolImplementation.git
 git clone https://github.com/armoredsoftware/xenVchan.git
 git clone https://github.com/armoredsoftware/tpmEmulator.git
+git clone https://github.com/armoredsoftware/measurer.git
 git clone https://github.com/ku-fpg/remote-json.git
-
 
 #Tags
 #cd xenVchan
@@ -33,7 +33,10 @@ git clone https://github.com/ku-fpg/remote-json.git
 #cd protocolImplementation
 #git checkout tags/v0.4
 
-
+cd measurer
+make configure-measurer
+make build-measurer
+cp gdb-7.9/gdb/gdb ../$EXECS 
 exit
 
 for i in outerappraiser outerattester; do

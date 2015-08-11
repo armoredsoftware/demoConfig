@@ -15,8 +15,10 @@ if [ "$EXEC" == "Attester" ];then
        tpmd
    fi
 
+   screen -X -S screen_app quit
    killall test1.o
-   $DIR/test1.o &
+   screen -dmS screen_app $DIR/test1.o
+   
    PID=`pidof test1.o`
    echo $PID
    killall gdb

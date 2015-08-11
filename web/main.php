@@ -545,6 +545,10 @@ function start(){
       <h4>Log</h4>
       <textarea id="attLog" rows="22" cols="30" style="resize:none;" disabled>
       </textarea>
+
+      <br>
+      <iframe src="http://tuna/shell/" id="gadget0" name="gadget0" frameborder="1" height="200" width="260"></iframe>
+
    </div>
    
    <div class="logDiv">

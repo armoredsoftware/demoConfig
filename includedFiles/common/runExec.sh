@@ -1,5 +1,6 @@
 #!/bin/bash
 DIR=~/demo
+MEASURE_PORT=3003
 EXEC=$1
 APP=$2
 ATT=$3
@@ -20,7 +21,7 @@ if [ "$EXEC" == "Attester" ];then
    PID=`pidof test1.o`
    echo $PID
    killall gdb
-   $DIR/gdb --port=3000 &
+   $DIR/gdb --port=$MEASURE_PORT &
 
 else
   # If we are not an attester kill tpmd
@@ -28,8 +29,7 @@ else
 fi
 
 if [ "$PID" != "" ];then
-   $DIR/$EXEC  $APP $ATT $CA $PID &
+   $DIR/$EXEC  $APP $ATT $CA $MEASURE_PORT $PID &
 else
    $DIR/$EXEC  $APP $ATT $CA &
 fi
-

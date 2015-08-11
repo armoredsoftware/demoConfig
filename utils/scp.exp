@@ -12,7 +12,7 @@ expect {
   "password:" { send "armored\r"}
 }
 expect -re $
-sleep 2
+sleep 1
 spawn ssh "root@$ip" "~/demo/setup.sh"
 expect {
   "(yes/no)?" {send "yes\r"

@@ -1,3 +1,4 @@
 #!/bin/bash
 
-yum -y install ncurses-devel jansson
+yum -y install ncurses-devel jansson > /dev/null &
+disown

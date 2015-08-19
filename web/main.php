@@ -39,7 +39,7 @@ function computeNodeChange(){
          success:function(data){
             $("#global_loading").hide();
             data = data.replace(/ +\t*/g,"\t");
-            var arr = data.slice(3,data.length -2).split("\n");
+            var arr = data.split("\n");
             if ( data.length <= 4){
                arr.pop();
             } 

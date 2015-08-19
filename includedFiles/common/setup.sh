@@ -2,8 +2,9 @@
 
 cd ~/demo
 
-mv caPrivateKey.txt caPublicKey.txt ekpub.txt goldenPcrComposite.txt ..
-
+if [ -f caPrivateKey.txt ];then
+  mv caPrivateKey.txt caPublicKey.txt ekpub.txt goldenPcrComposite.txt ..
+fi
 ./measurerSetup.sh 2>&1 &
 disown
 

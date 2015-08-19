@@ -1,14 +1,13 @@
 <?php
-/*  File:        nodeStatus.php
+/*  File:      killExecutable.php
   Author:      Justin Dawson (JDawson@ku.edu)
-  Description: This PHP script calls an expect script called vmIp.exp which
-               ultimately calls a script of the same name that must be on all 
-               the compute nodes involved in the demo. It gives the VM's name
-               domain id, and IP address
+  Description: This PHP script calls a shell script called killExec.sh which
+               will call the ~/demo/killExec.sh script on the corresponding 
+               vm that will kill the corresponding executable
 */
   include('session.php');
   $ip = $_POST['ip'];
   $exec = $_POST['exec'];
-  $output = shell_exec("./killExec.exp $ip $exec"); 
+  $output = shell_exec("./killExec.sh $ip $exec"); 
   echo $output;
 ?>

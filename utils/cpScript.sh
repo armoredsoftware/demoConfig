@@ -1,4 +1,9 @@
 #!/bin/bash
+#
+# cpScript.sh
+# Copies an input directory to a compute node
+# If a compute node is not specified then all the compute nodes (1-8) will 
+# receive the input directory
 
 source_dir=$1
 compute_node_start=1
@@ -21,13 +26,13 @@ if [ ! -z "$2" ]; then
 fi
 
 
-echo -n "Obtaining Ip Addresses from vms"
-ip=`utils/getIPs.exp $compute_node_start $compute_node_end`
+echo "Obtaining Ip Addresses from vms"
+ip=`utils/getIPs.sh $compute_node_start $compute_node_end`
 
 echo -n "Copying $source_dir to vms"
 for i in $ip; do
   echo -n "."
-  utils/scp.exp  "$source_dir" "$i" 
+  utils/scp.sh  "$source_dir" "$i" 
 done
 
 echo

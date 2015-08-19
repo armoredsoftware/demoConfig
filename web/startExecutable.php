@@ -1,10 +1,9 @@
 <?php
-/*  File:        nodeStatus.php
+/*  File:        startExecutable.php
   Author:      Justin Dawson (JDawson@ku.edu)
-  Description: This PHP script calls an expect script called vmIp.exp which
-               ultimately calls a script of the same name that must be on all 
-               the compute nodes involved in the demo. It gives the VM's name
-               domain id, and IP address
+  Description: This PHP script calls an shell script called runExec.sh which
+               will run an executable on a given vm with arguments for the
+               Appraiser Attester and CA Xen Domain Ids.
 */
   include('session.php');
   $ip = $_POST['ip'];
@@ -13,6 +12,6 @@
   $att = $_POST['att'];
   $ca = $_POST['ca'];
 
-  $output = shell_exec("./runExec.exp $ip $exec $app $att $ca"); 
+  $output = shell_exec("./runExec.sh $ip $exec $app $att $ca"); 
   echo $output;
 ?>

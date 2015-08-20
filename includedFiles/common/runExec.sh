@@ -1,10 +1,14 @@
 #!/bin/bash
 DIR=~/demo
-MEASURE_PORT=3003
 EXEC=$1
 APP=$2
 ATT=$3
 CA=$4
+
+MEASURE_PORT=3057
+APPLICATION=test1.o
+
+DEBUG=1
 
 if [ "$EXEC" == "Attester" ];then
    echo "HERE"
@@ -16,12 +20,19 @@ if [ "$EXEC" == "Attester" ];then
        tpmd
    fi
 
-   killall test1.o
-   $DIR/test1.o &
-   PID=`pidof test1.o`
-   echo $PID
+   killall $APPLICATION
    killall gdb
-   $DIR/gdb --port=$MEASURE_PORT &
+
+   screen -dmS app_session $DIR/$APPLICATION
+   PID=`pidof $APPLICATION`
+   echo "Application: $PID"
+
+   screen -dmS measurer_screen $DIR/gdb --port=$MEASURE_PORT > measurer_out
+
+   if [ "$PID" == "" ];then
+       echo "Error in launching $APPLICATION"
+       exit
+   fi
 
 else
   # If we are not an attester kill tpmd
@@ -29,7 +40,8 @@ else
 fi
 
 if [ "$PID" != "" ];then
-   $DIR/$EXEC  $APP $ATT $CA $MEASURE_PORT $PID &
+   $DIR/$EXEC  $APP $ATT $CA $PID $DEBUG &
 else
    $DIR/$EXEC  $APP $ATT $CA &
 fi
+

@@ -1,5 +1,11 @@
 #!/bin/bash
 
-pid=`ps -e | grep $1 | awk '{print $1}'`
-kill $pid
+killall $1
+
+if [ "$1" == "Attester" ];then
+
+   killall test1.o
+   killall gdb
+
+fi
 

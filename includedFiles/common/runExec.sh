@@ -40,7 +40,7 @@ else
 fi
 
 if [ "$PID" != "" ];then
-   $DIR/$EXEC  $APP $ATT $CA $PID $DEBUG &
+   $DIR/$EXEC  $APP $ATT $CA $MEASURE_PORT $PID $DEBUG &
 else
    $DIR/$EXEC  $APP $ATT $CA &
 fi

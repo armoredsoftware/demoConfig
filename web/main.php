@@ -125,6 +125,7 @@ function launchFunc(){
          success:function(data){
             console.log(data);
             $(launch).prop("disabled",true);
+            console.log("Finish Launch");
          }
          });
 
@@ -134,13 +135,14 @@ function killFunc(){
     var launch = this;
     var exec = $(this).data("executable");
     var ip =$(this).data("ip");
- 
+    console.log("Killing: "+exec+" on "+ip);
     $.ajax({method:"POST",
          url:"killExecutable.php",
          data:{ip:ip,exec:exec},
          success:function(data){
             console.log(data);
             $(launch).prop("disabled",true);
+            console.log("Finish Kill");
          }
          });
 
@@ -355,6 +357,7 @@ function buttonSetup(){
                   $("#global_loading").hide();
                   $("#appLog").val(data);
                   console.log(data);
+                  console.log("Finish Send");
                }
        });
           setTimeout(function(){

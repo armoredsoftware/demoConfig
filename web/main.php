@@ -60,12 +60,12 @@ function computeNodeChange(){
                                                         
 	    if (arr.length > 0){
 	        $(that).children(".vms").append(list);
-                $(list).find(".vmName").click(function tmp (){
+                $(list).find(".vmName").off("click").on("click", function tmp (){
                     $(this).closest("tr").find("td>input:radio").click();
                   });
-                $(list).find("input:radio").click(clickRadio);
+                $(list).find("input:radio").off("click").on("click", clickRadio);
                 $(that).children(".launch").show();
-                $(that).children(".launch").click(launchFunc);
+                $(that).children(".launch").off("click").on("click", launchFunc);
                 
      //           var button = '<button id="'+num+'Cancel">Stop</button>';
      //           $(that).children(".vms").append(button);
@@ -111,7 +111,7 @@ function launchFunc(){
 
     kill.prop("disabled", false);
     kill.show();
-    kill.click(killFunc);
+    kill.off("click").on("click",killFunc);
     kill.data("ip",button.data("ip")); 
     console.log("Launching: "+exec+" "+appDomVal+" "+attDomVal+" "+caDomVal);
 

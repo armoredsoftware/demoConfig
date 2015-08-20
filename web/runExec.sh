@@ -6,5 +6,5 @@ app=$3
 att=$4
 ca=$5
 
-sshpass -p "armored" ssh -oStrictHostKeyChecking=no root@$ip "~/demo/runExec.sh $executable $app $att $ca"
+screen -dm sshpass -p "armored" ssh -oStrictHostKeyChecking=no root@$ip "~/demo/runExec.sh $executable $app $att $ca"
 

@@ -2,5 +2,6 @@
 
 ip=$1
 executable=$2
-sshpass -p "armored" ssh -oStrictHostKeyChecking=no root@$ip "~/demo/killExec.sh $executable"
+screen -dm sshpass -p "armored" ssh -oStrictHostKeyChecking=no root@$ip "~/demo/killExec.sh $executable"
+
 

@@ -527,7 +527,7 @@ function start(){
    </div>
 
    <div class="logDiv">
-      <h3 class="title"> Attester</h3>
+      <h3 class="title"> Attester / Measurer</h3>
       <label>Select a Compute Node: </label>
       <select id="attNode1">
         <option></option>
@@ -548,6 +548,8 @@ function start(){
       <h4>Log</h4>
       <textarea id="attLog" rows="22" cols="30" style="resize:none;" disabled>
       </textarea>
+      <br>
+      <iframe src="http://tuna/shell/" id="gadget0" name="gadget0" frameborder="1" height="200" width="260"></iframe>
    </div>
    
    <div class="logDiv">

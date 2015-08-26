@@ -1,6 +1,6 @@
 #!/bin/bash
 PWD=`pwd`
-DEMO_DIR="demo5"
+DEMO_DIR="demo4_5"
 EXECS="demo"
 
 if [ -z "$1" ];then
@@ -22,27 +22,39 @@ git clone https://github.com/armoredsoftware/measurer.git
 git clone https://github.com/ku-fpg/remote-json.git
 
 #Tags
-#cd xenVchan
-#git checkout tags/v0.4
-#cd ..
+cd xenVchan
+git checkout tags/v0.4.5
+cd ..
 
-#cd tpmEmulator
-#git checkout tags/v0.4
-#cd ..
+cd tpmEmulator
+git checkout tags/v0.4.5
+cd ..
 
-#cd protocolImplementation
-#git checkout tags/v0.4
+cd protocolImplementation
+git checkout tags/v0.4.5
+cd ..
 
 cd measurer
+git checkout tags/v0.4.5
+cd gdb-7.9/gdb;
+./configure
+cd ..
+./configure 
+cd ..
+make configure-measurer
+make build-measurer
+
 make configure-measurer
 make build-measurer
 cp gdb-7.9/gdb/gdb ../$EXECS 
-exit
+cd ..
+
+cd protocolImplementation
 
 for i in outerappraiser outerattester; do
   cd $i;
   cabal sandbox init;
-  cabal sandbox add-source ../../tpmEmulator ../../xenVchan/VChanUtil ../shared/bytestringJSON ../shared ../appraisal ../attestation ../protoMonad ../negotiationtools ../../remote-json ../remoteMonad
+  cabal sandbox add-source ../../tpmEmulator ../../xenVchan/VChanUtil ../shared/bytestringJSON ../shared ../appraisal ../attestation ../protoMonad ../negotiationtools ../../remote-json ../remoteMonad ../armored-config
  
   # run one in background
   if [ "$i" == "outerappraiser" ];then
@@ -60,25 +72,23 @@ cd outerattester
 cabal build
 cd ..
 
+
 cd certificateAuthority
 cabal sandbox init;
-cabal sandbox add-source ../../tpmEmulator ../../xenVchan/VChanUtil ../shared/bytestringJSON ../shared ../protoMonad  ../../remote-json ../remoteMonad
+cabal sandbox add-source ../../tpmEmulator ../../xenVchan/VChanUtil ../shared/bytestringJSON ../shared ../protoMonad  ../../remote-json ../remoteMonad ../armored-config
 cabal install --dependencies-only
 cabal build
 cd ..
 
 
-cp outerattester/dist/build/outerAttester/outerAttester  ../$EXECS
-cp outerappraiser/dist/build/outerAppraiser/outerAppraiser ../$EXECS
+cp outerattester/dist/build/outerAttester/outerAttester  ../$EXECS/Attester
+cp outerappraiser/dist/build/outerAppraiser/outerAppraiser ../$EXECS/Appraiser
 cp certificateAuthority/dist/build/CA/CA ../$EXECS
 
-ln -s ../$EXECS/outerAttester ../$EXECS/Attester
-ln -s ../$EXECS/outerAppraiser ../$EXECS/Appraiser
-
-
 cd ../../
-cp includedFiles/* $DEMO_DIR/$EXECS 
-
+cp includedFiles/common/* $DEMO_DIR/$EXECS 
+cp includedFiles/demo4_5/* $DEMO_DIR/$EXECS
+exit
 cd $PWD
 # cp exectuables to every vm
 if [ "$1" != "all" ];then

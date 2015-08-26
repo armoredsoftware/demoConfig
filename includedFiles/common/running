@@ -1,0 +1,2 @@
+#!/bin/bash
+ps -e | grep -E "Attester|gdb|msrr|Appraiser|CA|test1.o|test2.o|buffer_overflow1.o|buffer_overflow2.o"

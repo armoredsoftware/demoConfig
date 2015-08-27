@@ -28,6 +28,12 @@ function computeNodeChange(){
   var num = $(this).attr("id").replace("attester");
   $(that).children('textarea').val("");                                         
   if ( node == ""){
+     $(that).children(".vms").empty();
+     if ( $(this).attr("id") == "caNode"){
+        $(that).children(".vms").css("height","100px");
+     }
+     $(that).children(".launch").hide();
+
     return;
     
   }
@@ -46,6 +52,7 @@ function computeNodeChange(){
             var list = "<table><th></th><th>ID</th><th>Name</th></table>";
              
             $(that).children(".vms").empty();
+            $(that).children(".vms").css("height","");
             $(arr).each(function(){
                 var v = '<tr></tr>';                                             
                 var vm = this.split("\t");
@@ -114,7 +121,7 @@ function launchFunc(){
     kill.off("click").on("click",killFunc);
     kill.data("ip",button.data("ip")); 
     console.log("Launching: "+exec+" "+appDomVal+" "+attDomVal+" "+caDomVal);
-
+    console.log(button.data("ip"));
     $.ajax({method:"POST",
          url:"startExecutable.php",
          data:{ip:button.data("ip"),
@@ -126,13 +133,23 @@ function launchFunc(){
             console.log(data);
             $(launch).prop("disabled",true);
             console.log("Finish Launch");
+            setTimeout(function(){
+                _cancelled=0;
+               if( $(launch).attr('id') == "attLaunch"){
+                  console.log("ReadLog att");
+                  readLog($("#attNode1"))
+               }else if ($(launch).attr('id') == "appLaunch"){
+                  console.log("ReadLog app");
+                  readLog($("#appNode"));
+               }
+            },400);
          }
          });
 
 }
 
 function killFunc(){
-    var launch = this;
+    var kill = this;
     var exec = $(this).data("executable");
     var ip =$(this).data("ip");
     console.log("Killing: "+exec+" on "+ip);
@@ -141,8 +158,18 @@ function killFunc(){
          data:{ip:ip,exec:exec},
          success:function(data){
             console.log(data);
-            $(launch).prop("disabled",true);
+            $(kill).prop("disabled",true);
             console.log("Finish Kill");
+            setTimeout(function(){
+              _cancelled=1;
+               if( $(kill).attr('id') == "attKill"){
+                  console.log("ReadLog att");
+                  readLog($("#attNode1"))
+               }else if ($(kill).attr('id') == "appKill"){
+                  console.log("ReadLog app");
+                  readLog($("#appNode"));
+               }
+            },100);
          }
          });
 
@@ -206,11 +233,11 @@ function requestChange(){
 
     }else if (type =="Request List"){
       $params.empty();
-      $params.append('<textarea id="protocol" rows="25" cols="30" >Enter Request</textarea>');
+      $params.append('<textarea id="protocol" rows="15" cols="30" >Enter Request</textarea>');
       textAreaSetup();
     }else if (type == "Other"){
         $params.empty();
-        $params.append('<textarea id="protocol" rows="25" cols="30" >Enter Request</textarea>');
+        $params.append('<textarea id="protocol" rows="15" cols="30" >Enter Request</textarea>');
         textAreaSetup();
     }
 }
@@ -358,6 +385,8 @@ function buttonSetup(){
                   $("#appLog").val(data);
                   console.log(data);
                   console.log("Finish Send");
+                  readLog($("#appNode"));
+                  readLog($("#attNode1"));
                }
        });
           setTimeout(function(){
@@ -369,6 +398,7 @@ function buttonSetup(){
 }
 
 function readLog(elem){
+    console.log("ReadLog");
     var ip = ($(elem).siblings(".vms").find("input:checked").data("ip"));
     $.ajax({method:"POST",
             url:"readLog.php",
@@ -384,6 +414,9 @@ function readLog(elem){
     });
     if ( !_cancelled){
        setTimeout(function(){
+          if (!_cancelled){
+            readLog(elem);
+          }
        },300);
     }
 }   
@@ -438,7 +471,7 @@ function start(){
           }
           if ($(this).prop("checked")){
              $("#reqListOut").append('<button id="add">Add</button><br/>');
-             $("#reqListOut").append('<textarea id="protocol" rows="25" cols="30" >Enter Request</textarea>');
+             $("#reqListOut").append('<textarea id="protocol" rows="15" cols="30" >Enter Request</textarea>');
              textAreaSetup();
 
              $("#add").click(function(){
@@ -473,6 +506,24 @@ function start(){
 </div>
 <div id="workspace">
    <div class="logDiv" style>
+      <h3 class="title">Certificate Authority</h3>
+      <label>Select a Compute Node: </label>
+      <select id="caNode">
+        <option></option>
+        <option>1</option>
+        <option>2</option>
+        <option>3</option>
+        <option>4</option>
+        <option>5</option>
+        <option>6</option>
+        <option>7</option>
+        <option>8</option>
+      </select>
+
+      <div class="vms"></div>
+      <button class="launch" id="CALaunch" style="display:none" data-executable="CA" disabled>Launch</button>
+      <button class="kill" id="CAKill" style="display:none" data-executable="CA" disabled>Kill</button>
+      <hr>
       <h3>User Request</h3>
       <label>Request List</label>
       <input id="requestList" type="checkbox" />
@@ -488,7 +539,7 @@ function start(){
       </select>
          <br/>
       <div id="requestParams">
-      <!--   <textarea id="protocol" rows="25" cols="30" >Enter Request</textarea>
+      <!--   <textarea id="protocol" rows="15" cols="30" >Enter Request</textarea>
          -->
       </div>
       <br />
@@ -548,11 +599,13 @@ function start(){
       <h4>Log</h4>
       <textarea id="attLog" rows="22" cols="30" style="resize:none;" disabled>
       </textarea>
-      <br>
-      <iframe src="http://tuna/shell/" id="gadget0" name="gadget0" frameborder="1" height="200" width="260"></iframe>
    </div>
-   
    <div class="logDiv">
+      <h3 class="title">Application</h3>
+      <iframe src="http://tuna/shell/" id="gadget0" name="gadget0" frameborder="1" height="500" width="260"></iframe>
+    
+   </div>
+<!--   <div class="logDiv">
       <h3 class="title">Certificate Authority</h3>
       <label>Select a Compute Node: </label>
       <select id="caNode">
@@ -567,14 +620,13 @@ function start(){
         <option>8</option>
       </select>
 
-
       <div class="vms"></div>
       <button class="launch" id="CALaunch" style="display:none" data-executable="CA" disabled>Launch</button>
       <button class="kill" id="CAKill" style="display:none" data-executable="CA" disabled>Kill</button>
       <h4>Log</h4>
       <textarea id="appLog" rows="22" cols="30" style="resize:none;" disabled>
-      </textarea>
-   </div>
+      </textarea> 
+   </div> -->
 
 </div>
 <div>

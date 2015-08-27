@@ -6,7 +6,7 @@ app=$3
 att=$4
 ca=$5
 
-if[ "$executable" == "Attester" ]; then
+if [ "$executable" == "Attester" ]; then
    kill -9 `pidof shellinaboxd`
    screen -dm shellinaboxd --disable-ssl -s /:apache:apache:HOME:"sshpass -p "armored" ssh -oStrictHostKeyChecking=no -t root@$ip screen -r -S app_session"
 fi

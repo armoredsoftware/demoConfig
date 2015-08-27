@@ -35,7 +35,7 @@ if [ "$EXEC" == "Attester" ];then
    fi
 
    # give Measurer time to setup
-   sleep 0.5
+   sleep 1
    
 else
   # If we are not an attester kill tpmd

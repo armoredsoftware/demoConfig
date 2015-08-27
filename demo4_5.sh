@@ -46,7 +46,16 @@ make build-measurer
 
 make configure-measurer
 make build-measurer
+cd app
+make
+cd ..
 cp gdb-7.9/gdb/gdb ../$EXECS 
+cp app/test1.o ../$EXECS
+cp app/test2.o ../$EXECS
+cp app/buffer_overflow/buffer_overflow1.o ../$EXECS
+cp app/buffer_overflow/buffer_overflow2.o ../$EXECS
+
+
 cd ..
 
 cd protocolImplementation

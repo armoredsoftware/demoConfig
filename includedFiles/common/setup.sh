@@ -3,7 +3,7 @@
 cd ~/demo
 
 if [ -f caPrivateKey.txt ];then
-  mv caPrivateKey.txt caPublicKey.txt ekpub.txt goldenPcrComposite.txt ..
+  mv caPrivateKey.txt caPublicKey.txt ekpub.txt goldenPcrComposite.txt running ..
 fi
 
 #Set up so modprobes get executed on reboot, and tpm emulator gets installed

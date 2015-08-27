@@ -136,10 +136,8 @@ function launchFunc(){
             setTimeout(function(){
                 _cancelled=0;
                if( $(launch).attr('id') == "attLaunch"){
-                  console.log("ReadLog att");
                   readLog($("#attNode1"))
                }else if ($(launch).attr('id') == "appLaunch"){
-                  console.log("ReadLog app");
                   readLog($("#appNode"));
                }
             },400);
@@ -163,13 +161,11 @@ function killFunc(){
             setTimeout(function(){
               _cancelled=1;
                if( $(kill).attr('id') == "attKill"){
-                  console.log("ReadLog att");
                   readLog($("#attNode1"))
                }else if ($(kill).attr('id') == "appKill"){
-                  console.log("ReadLog app");
                   readLog($("#appNode"));
                }
-            },100);
+            },500);
          }
          });
 
@@ -398,7 +394,6 @@ function buttonSetup(){
 }
 
 function readLog(elem){
-    console.log("ReadLog");
     var ip = ($(elem).siblings(".vms").find("input:checked").data("ip"));
     $.ajax({method:"POST",
             url:"readLog.php",

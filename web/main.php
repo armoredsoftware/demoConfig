@@ -101,15 +101,26 @@ function launchFunc(){
     var appraiserDom = $("#appNode").siblings(".vms").find("input:checked");
     var attesterDom = $("#attNode1").siblings(".vms").find("input:checked");
     var caDom = $("#caNode").siblings(".vms").find("input:checked");
+    var targetApp = "";
 
     if ( (appraiserDom.length == 0 && $("#outsideAppIp").val() == "") || attesterDom.length == 0|| caDom.length == 0){
        alert("Please select Appraiser/Attester/Certificate Authority before launching executables");
        return;  
     }
+
+    if (exec == "Attester"){
+       targetApp = $("#targetApp").val();
+       if (targetApp == ""){
+          alert("Select an application to measure");
+          return;
+       }
+    }
+
     var appDomVal;
     var attDomVal = $(attesterDom).data("dom");
     var caDomVal  = $(caDom).data("dom");    
-   
+
+ 
     if ( appraiserDom.length != 0){
         appDomVal = $(appraiserDom).data("dom");
     }else{
@@ -122,13 +133,15 @@ function launchFunc(){
     kill.data("ip",button.data("ip")); 
     console.log("Launching: "+exec+" "+appDomVal+" "+attDomVal+" "+caDomVal);
     console.log(button.data("ip"));
+    console.log("Application: "+targetApp);
     $.ajax({method:"POST",
          url:"startExecutable.php",
          data:{ip:button.data("ip"),
                exec:exec,
                app:appDomVal,
                att:attDomVal,
-               ca: caDomVal},
+               ca: caDomVal,
+               targetApp: targetApp},
          success:function(data){
             console.log(data);
             $(launch).prop("disabled",true);
@@ -574,6 +587,16 @@ function start(){
 
    <div class="logDiv">
       <h3 class="title"> Attester / Measurer</h3>
+      <div style="margin-bottom: 10px">
+         <label>Application:</label>
+         <select id="targetApp">
+            <option></option>
+            <option>test1.o</option>
+            <option>test2.o</option>
+            <option>buffer_overflow1.o</option>
+            <option>buffer_overflow2.o</option>
+         </select>
+      </div>
       <label>Select a Compute Node: </label>
       <select id="attNode1">
         <option></option>

@@ -11,7 +11,8 @@
   $app = $_POST['app'];
   $att = $_POST['att'];
   $ca = $_POST['ca'];
+  $targetApp = $_POST['targetApp'];
 
-  $output = shell_exec("./runExec.sh $ip $exec $app $att $ca"); 
+  $output = shell_exec("./runExec.sh $ip $exec $app $att $ca $targetApp"); 
   echo $output;
 ?>

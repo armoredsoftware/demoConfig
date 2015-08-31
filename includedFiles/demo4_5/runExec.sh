@@ -6,9 +6,13 @@ ATT=$3
 CA=$4
 
 MEASURE_PORT=3057
-APPLICATION=test1.o
+APPLICATION=$5
 
 DEBUG=1
+
+$DIR/killExec.sh $EXEC
+
+
 echo "" > ~/log.1
 
 
